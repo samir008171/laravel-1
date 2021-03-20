@@ -47,7 +47,7 @@
 @endsection
 
 @section('datatableScripts')
-{!! $dataTable->scripts() !!}
+ {!! $dataTable->scripts()!!}
 @endsection
 
 

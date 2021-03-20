@@ -8,7 +8,8 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 class Doctor_modelDataTable extends DataTable
 {
     /**
@@ -19,6 +20,9 @@ class Doctor_modelDataTable extends DataTable
      */
     public function dataTable($query)
     {
+        
+        //  echo " sdf";   
+        // return $query;
         return datatables()
             ->eloquent($query)
             ->addColumn('action', 'doctor_model.action');
@@ -32,9 +36,9 @@ class Doctor_modelDataTable extends DataTable
      */
     public function query(Doctor_model $model)
     {
-        return $model->newQuery();
-    }
-
+        // print_r($model->newQuery());
+        return $model->newQuery()->Where('isDelete','No');
+    }   
     /**
      * Optional method if you want to use html builder.
      *
@@ -45,7 +49,6 @@ class Doctor_modelDataTable extends DataTable
         return $this->builder()
                     ->setTableId('datatable')
                     // ->columns(['id','First Name','Last Name','Mobile','Alternate Mobile','Email','Alternate  email','Role','Status'])
-                    
                     ->columns([
                             "iUserID"=>['title'=>'id'],
                            "vFirstName"=>['title'=>'First Name'],
@@ -54,23 +57,40 @@ class Doctor_modelDataTable extends DataTable
                            "vAlternateNo"=>['title'=>'Alternate Mobile'],
                            "vEmail"=>['title'=>'Email'],
                            "vAlternateEmail"=>['title'=>'Alternate Email'],
-                           "eRole"=>['title'=>'Role'],
-                           "eStatus"=>['title'=>'Status'],
+                           "eRole"=>['title'=>'Role']
                            ])
-                    // ->minifiedAjax()
+                    ->minifiedAjax()
                     ->orderBy(0,'asc')
                     ->responsive(1)
                     ->dom('Bfrtip')
                     ->addColumn([
                         'targets'=> '0',
-                        'name' => 'id',
+                        'name' => 'iUserID',
+                        'data' => 'eStatus',
+                        'title' => 'Status',
+                        'searchable' => false,
+                        'orderable' => false,
+                        'render' => "function(){
+                            if(data=='Active') 
+                            return '<span class=\"badge badge-success\" style=\"cursor:pointer\" onclick=\"ChangeStatus('+full.iUserID +',\'Inactive\',\'tbl_users\',\'eStatus\',\'iUserID\')\">'+data+'</span>';
+                            else
+                            return '<span class=\"badge badge-danger\" style=\"cursor:pointer\" onclick=\"ChangeStatus('+full.iUserID +',\'Active\',\'tbl_users\',\'eStatus\',\'iUserID\')\">'+data+'</span>';
+                        }", 
+                        'footer' => 'Id',
+                        'exportable' => true,
+                        'printable' => true,
+                    ])
+                    ->addColumn([
+                        'targets'=> '0',
+                        'name' => 'iUserID',
                         'data' => 'iUserID',
                         'title' => 'Action',
-                        'searchable' => true,
-                        'orderable' => true,
-                        'render' => 'function(){ 
-                            return "<a href=\'"+data+"\' class=\'btn btn-outline-success btn-sm\'><i class=\'fa fa-edit\'></i></a> <button onclick=\'delete("+data+",\'iUserID\',\'tbl_users\')\' class=\'btn btn-outline-danger btn-sm\'><i class=\'fa fa-trash\'></i></button>";
-                        }', 
+                        'searchable' => false,
+                        'orderable' => false,
+                        'render' => "function(){ 
+                            var url_temp='".url('doctor/edit/')."/';
+                            return '<a href='+url_temp+1+' class=\"btn btn-outline-success btn-sm\"><i class=\"fa fa-edit\"></i></a> <button onclick=\"Delete('+data+',\'iUserID\',\'tbl_users\')\"  class=\"btn btn-outline-danger btn-sm\"><i class=\"fa fa-trash\"></i></button></button>';
+                        }", 
                         'footer' => 'Id',
                         'exportable' => true,
                         'printable' => true,
@@ -103,10 +123,5 @@ class Doctor_modelDataTable extends DataTable
      * @param $data
      * @return string
      */
-    protected function getActionColumn($data): string
-    {
-        // $showUrl = route('admin.brands.show', $data->iUserID);
-        // $editUrl = route('admin.brands.edit', $data->iUserID);
-        return "<button class='waves-effect btn deepPink-bgcolor delete'  ><i class='material-icons'>delete</i>Delete</button>";
-    }
+
 }

@@ -1,7 +1,19 @@
-
-
 @extends('layout.layout')
 @section('content')
+<?php
+if(isset($EditData) && $EditData != ''){
+    extract($EditData);
+  }else{
+    $EditData='';
+  }
+
+$vFirstName = Form::text('vFirstName',(isset($vFirstName) && $vFirstName!= '')?$vFirstName:'', array('class' => 'form-control', 'data-validation' => 'required', 'placeholder' => 'Enter first Name','type'=>'number'));
+$vLastName = Form::text('vLastName',(isset($vLastName) && $vLastName!= '')?$vLastName:'', array('class' => 'form-control', 'data-validation' => 'required', 'placeholder' => 'Enter first Name'));
+$vMobile = Form::text('vMobile',(isset($vMobile) && $vMobile!= '')?$vMobile:'', array('class' => 'form-control', 'data-validation' => 'required', 'placeholder' => 'Enter first Name'));
+$vAlternateNo = Form::text('vAlternateNo',(isset($vAlternateNo) && $vAlternateNo!= '')?$vAlternateNo:'', array('class' => 'form-control', 'data-validation' => 'required', 'placeholder' => 'Enter first Name'));
+$vEmail = Form::text('vEmail',(isset($vEmail) && $vEmail!= '')?$vEmail:'', array('class' => 'form-control', 'data-validation' => 'required', 'placeholder' => 'Enter first Name'));
+$vAlternateEmail = Form::text('vAlternateEmail',(isset($vAlternateEmail) && $vAlternateEmail!= '')?$vAlternateEmail:'', array('class' => 'form-control', 'data-validation' => 'required', 'placeholder' => 'Enter first Name'));
+?>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -45,14 +57,14 @@
                     <div class="col-xs-12 col-md-3">
                       <div class="form-group">
                         <label>First Name <span class="red"> *</span></label>
-                        <input type="text" name="vFirstName" id="vFirstName" class="form-control" data-validation="required" placeholder="Enter First Name"> 
+                        {{$vFirstName}}
                       </div>
                     </div>
 
                     <div class="col-xs-12 col-md-3">
                       <div class="form-group">
                         <label>Last Name <span class="red"> *</span></label>
-                        <input type="text" name="vLastName" id="vLastName" class="form-control" data-validation="required" placeholder="Enter Last Name"> 
+                        {{$vLastName}}
                       </div>
                     </div>
 
@@ -160,14 +172,11 @@
                       return false;
                     }
                   });
-          });
+      });
   });
 
 
-  function delete_global()
-  {
-    
-  }
+
 </script>
 @endsection
 

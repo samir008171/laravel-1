@@ -40,7 +40,11 @@ Route::group(['middleware'=>['ProtectedAdminPage']],function(){
     Route::get('/doctor/add', [Doctor::class, 'add']);
     //doctor save data
     Route::post('/doctor/save', [Doctor::class, 'save']);
+    //doctor edit get data
+    Route::get('/doctor/edit/{id}', [Doctor::class, 'edit']);
 
 });
 //global delete function
-Route::post('/delete_global', [General_model::class, 'delete_global']);
+Route::post('/Delete', [General_model::class, 'Delete']);
+//global status function
+Route::post('/ChangeStatus', [General_model::class, 'ChangeStatus']);

@@ -6,21 +6,22 @@ use Illuminate\Http\Request;
 use App\DataTables\Doctor_modelDataTable;
 use App\Models\Doctor_model;
 use Illuminate\Support\Facades\Crypt;
-
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use ParagonIE\ConstantTime\Base64;
 
 class Doctor extends Controller
 {
     function index(Doctor_modelDataTable $dataTable)
     {
         $data['title']='Doctor';
+        $users = DB::table('tbl_users')
+            ->select(['iUserID','vFirstName','vLastName','vMobile','vAlternateNo','vEmail','vAlternateEmail','eRole','eStatus']);
         return $dataTable->render('doctor.doctor_view',$data);
-        
-        // return view('doctor.doctor_view',$data);
     }
-    
+
     function add()
     {
-        $data['title']='Add New Doctor';
         $data['title']='Add New Doctor';
         return view('doctor.doctor_add_view',$data);
     }
@@ -43,5 +44,13 @@ class Doctor extends Controller
         $Doctor->vProfileimg = $ImgName;
         $Doctor->save();
         return redirect('doctor')->with('success',"Insert successfully");
+    }
+
+    function edit($id)
+    {
+        $this->Doctor_model = new Doctor_model;
+        $data['title']='Add New Doctor';
+        $data['EditData']=$this->Doctor_model->getAllDataByID($id);
+        return view('doctor.doctor_add_view',$data);
     }
 }
